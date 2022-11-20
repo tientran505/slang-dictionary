@@ -77,19 +77,48 @@ public class SlangDictionary {
         return null;
     }
 
+    /**
+     * Search by definition
+     * @param def keyword in definition of slang words to look for
+     * @return the linked list associated with each node's value is a pair of [slang, meaning]
+     */
+    public LinkedList<String[]> searchByDefinition(String def) {
+        LinkedList<String[]> slang = new LinkedList<>();
 
+        for (Map.Entry<String, List<String>> entries: slangDictionary.entrySet()) {
+            List<String> meanings = entries.getValue();
+            for (String meaning: meanings) {
+                if (meaning.toLowerCase().contains(def.toLowerCase())) {
+                    slang.add(new String[]{entries.getKey(), meaning});
+                }
+            }
+        }
+
+        return slang;
+    }
+
+    public void addSlangWord(String slang, String def) {
+        if (!slangDictionary.containsKey(slang)) {
+            ArrayList<String> meaning = new ArrayList<>();
+            meaning.add(def);
+            slangDictionary.put(slang, meaning);
+        }
+    }
+
+    public TreeMap<String, List<String>> getSlangDictionary() {
+        return slangDictionary;
+    }
 
     public static void main(String[] args) {
         SlangDictionary app = new SlangDictionary();
         app.importDictionary("slang.txt");
 
-        List<String> def = app.searchBySlangWord(">:O");
-        if (def != null) {
-            for (String str: def) {
-                System.out.println(str);
-            }
-        } else {
-            System.out.println("Inexisted slang word");
+        LinkedList<String[]> slangs = app.searchByDefinition("heAR");
+
+        System.out.println(slangs.size());
+
+        for (String[] slang: slangs) {
+            System.out.println(slang[0] + ": " + slang[1]);
         }
     }
 
