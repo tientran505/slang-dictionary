@@ -9,9 +9,11 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        String str = ">.<`Frustrated| angry| upset| in pain";
-        str = str.trim();
+        Set<String> s = new HashSet<>();
+        s.add("Hello World");
+        s.add("s");
+        s.add("a");
 
-        System.out.println(str);
+        System.out.println(s);
     }
 }
