@@ -15,6 +15,7 @@ public class SlangDictionary {
      */
     private TreeMap<String, List<String>> slangDictionary;
     private HashMap<String, Set<String>> slangMeaningKeyword;
+    private int numOfWords;
 
     /**
      * Constructor of SlangDictionary
@@ -22,6 +23,7 @@ public class SlangDictionary {
     public SlangDictionary() {
         slangDictionary = new TreeMap<>();
         slangMeaningKeyword = new HashMap<>();
+        numOfWords = 0;
     }
 
     /**
@@ -55,12 +57,14 @@ public class SlangDictionary {
                         meaning.add(s);
                         String[] keyWords = s.split(" ");
                         invertedIndex(slangWord, keyWords);
+                        numOfWords++;
                     }
                 }
                 else {
                     meaning.add(slangWordInfo[1]);
                     String[] keyWords = slangWordInfo[1].split(" ");
                     invertedIndex(slangWord, keyWords);
+                    numOfWords++;
                 }
                 slangDictionary.put(slangWord, meaning);
             }
@@ -95,11 +99,20 @@ public class SlangDictionary {
      * @param slang slang word to look for
      * @return list of meanings of slang word or null if the slang is not found
      */
-    public List<String> searchBySlangWord(String slang) {
+    public String[][] searchBySlangWord(String slang) {
         if (slangDictionary.containsKey(slang)) {
-            return slangDictionary.get(slang);
+            List<String> listOfMeaning = slangDictionary.get(slang);
+
+            String[][] res = new String[listOfMeaning.size()][3];
+            for (int i = 0; i < listOfMeaning.size(); i++) {
+                res[i][0] = "" + i + 1;
+                res[i][1] = slang;
+                res[i][2] = listOfMeaning.get(i);
+            }
+
+            return res;
         }
-        return null;
+        else return null;
     }
 
     /**
@@ -129,17 +142,29 @@ public class SlangDictionary {
         return null;
     }
 
+    public String[][] convertToTableData() {
+        String[][] res = new String[numOfWords][3];
+
+        int i = 0;
+        for (Map.Entry<String, List<String>> m: slangDictionary.entrySet()) {
+            List<String> meanings = m.getValue();
+
+            for (String meaning: meanings) {
+                res[i][0] = "" + (i + 1);
+                res[i][1] = m.getKey();
+                res[i][2] = meaning;
+                i++;
+            }
+        }
+
+        return res;
+    }
+
     public void addSlangWord(String slang, String def) {
         if (!slangDictionary.containsKey(slang)) {
             ArrayList<String> meaning = new ArrayList<>();
             meaning.add(def);
             slangDictionary.put(slang, meaning);
-        }
-    }
-
-    public void printKeyword() {
-        for (Map.Entry m: slangMeaningKeyword.entrySet()) {
-            System.out.println(m.getKey() + ": " + m.getValue());
         }
     }
 
