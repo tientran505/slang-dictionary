@@ -66,7 +66,7 @@ public class SlangDictionary {
                     invertedIndex(slangWord, keyWords);
                     numOfWords++;
                 }
-                slangDictionary.put(slangWord, meaning);
+                slangDictionary.put(slangWord.trim(), meaning);
             }
 
             reader.close();
@@ -105,7 +105,7 @@ public class SlangDictionary {
 
             String[][] res = new String[listOfMeaning.size()][3];
             for (int i = 0; i < listOfMeaning.size(); i++) {
-                res[i][0] = "" + i + 1;
+                res[i][0] = "" + (i + 1);
                 res[i][1] = slang;
                 res[i][2] = listOfMeaning.get(i);
             }
@@ -148,7 +148,6 @@ public class SlangDictionary {
         int i = 0;
         for (Map.Entry<String, List<String>> m: slangDictionary.entrySet()) {
             List<String> meanings = m.getValue();
-
             for (String meaning: meanings) {
                 res[i][0] = "" + (i + 1);
                 res[i][1] = m.getKey();
@@ -157,6 +156,8 @@ public class SlangDictionary {
             }
         }
 
+        System.out.println("i = " + i);
+        System.out.println("res = " + res.length);
         return res;
     }
 
