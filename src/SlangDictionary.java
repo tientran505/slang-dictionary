@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -120,11 +118,11 @@ public class SlangDictionary {
      * @param def keyword in definition of slang words to look for
      * @return the linked list associated with each node's value is a pair of [slang, meaning]
      */
-    public LinkedList<String[]> searchByDefinition(String def) {
-        LinkedList<String[]> res = new LinkedList<>();
+    public String[][] searchByDefinition(String def) {
         Set<String> slang = slangMeaningKeyword.get(def.toLowerCase());
 
         if (slang != null) {
+            LinkedList<String[]> res = new LinkedList<>();
             for (String s: slang) {
 
                 List<String> meaning = slangDictionary.get(s);
@@ -137,7 +135,14 @@ public class SlangDictionary {
                 }
             }
 
-            return res;
+            String[][] resData = new String[res.size()][3];
+            for (int i = 0; i < res.size(); i++) {
+                resData[i][0] = "" + (i + 1);
+                resData[i][1] = res.get(i)[0];
+                resData[i][2] = res.get(i)[1];
+            }
+
+            return resData;
         }
         return null;
     }
@@ -161,32 +166,76 @@ public class SlangDictionary {
         return res;
     }
 
-    public void addSlangWord(String slang, String def) {
-        if (!slangDictionary.containsKey(slang)) {
+    public boolean addSlangWord(String slang, String def) {
+        if (!slangDictionary.containsKey(slang.toUpperCase())) {
             ArrayList<String> meaning = new ArrayList<>();
             meaning.add(def);
-            slangDictionary.put(slang, meaning);
+            System.out.println("Size = " + meaning.size() + ", def = " + def);
+            slangDictionary.put(slang.toUpperCase(), meaning);
+            return true;
         }
+
+        return false;
+    }
+
+    public void overwriteSlang(String slang, String oldDef, String newDef) {
+        List<String> meanings = slangDictionary.get(slang);
+
+        for (int i = 0; i < meanings.size(); i++) {
+            if (meanings.get(i).equals(oldDef)) {
+                meanings.set(i, newDef);
+            }
+        }
+
+        slangDictionary.put(slang, meanings);
+    }
+
+    public void duplicateSlang(String slang, String def) {
+        List<String> meanings = slangDictionary.get(slang.toUpperCase());
+        meanings.add(def);
+        System.out.println(slang + " - " + meanings);
+        slangDictionary.put(slang, meanings);
+    }
+
+    public void writeDictionary(String fileName) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+
+            writer.write("Slag`Meaning\n");
+
+            for (Map.Entry<String, List<String>> m: slangDictionary.entrySet()) {
+                writer.write(m.getKey() + "`");
+
+                List<String> meanings = m.getValue();
+
+                for (int i = 0; i < meanings.size(); i++) {
+                    if (i != 0) {
+                        writer.write("| ");
+                    }
+                    writer.write(meanings.get(i));
+                }
+                writer.write("\n");
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clearDictionary() {
+        for (Map.Entry<String, List<String>> map: slangDictionary.entrySet()) {
+            map.getValue().clear();
+        }
+        slangDictionary.clear();
+
+        for (Map.Entry<String, Set<String>> map: slangMeaningKeyword.entrySet()) {
+            map.getValue().clear();
+        }
+        slangMeaningKeyword.clear();
     }
 
     public TreeMap<String, List<String>> getSlangDictionary() {
         return slangDictionary;
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        SlangDictionary app = new SlangDictionary();
-        app.importDictionary("slang.txt");
-
-        long startTime = System.currentTimeMillis();
-        LinkedList<String[]> slangs = app.searchByDefinition("friend");
-        long stopTime = System.currentTimeMillis();
-        long elapseTime = stopTime - startTime;
-
-        if (slangs != null) {
-            for (String[] slang: slangs) {
-                System.out.println(slang[0] + ": " + slang[1]);
-            }
-            System.out.println("\n\nTime to execute: " + elapseTime);
-        }
     }
 }

@@ -1,12 +1,12 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
 
 /**
  * PACKAGE_NAME
@@ -24,15 +24,22 @@ public class SearchSlangPanel extends JPanel implements ActionListener, MouseLis
     private String[][] data;
 
     private JLabel resultLabel;
+    JComboBox<String> jComboBox;
+
     public SearchSlangPanel(SlangDictionary slangDictionary) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.slangDictionary = slangDictionary;
 
+
         searchField = new JTextField("Search (e.g. NSFW, OMW, vamping)");
-        searchField.setPreferredSize(new Dimension(350, 30));
+        searchField.setPreferredSize(new Dimension(250, 30));
 
         searchField.addMouseListener(this);
+
+        String[] options = {"Search by slang word", "Search by definition keyword"};
+
+        jComboBox = new JComboBox<>(options);
 
         JButton searchBtn = new JButton("Search");
         searchBtn.addActionListener(this);
@@ -42,6 +49,7 @@ public class SearchSlangPanel extends JPanel implements ActionListener, MouseLis
         JButton refreshBtn = new JButton("Refresh");
         refreshBtn.addActionListener(this);
 
+        searchPnl.add(jComboBox);
         searchPnl.add(searchField);
         searchPnl.add(searchBtn);
         searchPnl.add(refreshBtn);
@@ -80,31 +88,54 @@ public class SearchSlangPanel extends JPanel implements ActionListener, MouseLis
         add(resultLabel);
         add(Box.createVerticalStrut(20));
         add(sp);
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equals("Search")) {
-            String slang = searchField.getText();
-            System.out.println("btn pressed");
+            String selector = Objects.requireNonNull(jComboBox.getSelectedItem()).toString();
+            if (selector.equals("Search by slang word")) {
+                String slang = searchField.getText();
 
-            if (slang.equals("")) {
+                if (slang.equals("")) {
+                    JOptionPane.showMessageDialog(this, "Please Enter slang to find");
+                }
+                else {
+                    String[][] newDatas = this.slangDictionary.searchBySlangWord(slang.toUpperCase());
 
-                JOptionPane.showMessageDialog(this, "Please Enter slang to find");
+                    if (newDatas != null) {
+                        clearTable();
+
+                        resultLabel.setText(slang + " has " + newDatas.length + " meaning(s)");
+
+                        for (String[] newData : newDatas) {
+                            defaultTableModel.addRow(newData);
+                        }
+                    }
+                }
             }
-            else {
-                String[][] newDatas = this.slangDictionary.searchBySlangWord(slang.toUpperCase());
-                System.out.println("btn pressed here");
 
-                if (newDatas != null) {
-                    clearTable();
+            else if (selector.equals("Search by definition keyword")) {
+                String keyWord = searchField.getText();
 
-                    resultLabel.setText(slang + " has " + newDatas.length + " meaning(s)");
+                if (keyWord.equals("")) {
+                    JOptionPane.showMessageDialog(this, "Please Enter keyword to find");
+                }
+                else {
+                    String[][] slangs = this.slangDictionary.searchByDefinition(keyWord);
 
-                    for (String[] newData : newDatas) {
-                        defaultTableModel.addRow(newData);
+                    if (slangs == null) {
+
+                    }
+                    else {
+                        clearTable();
+                        resultLabel.setText("Slang Dictionary has " + slangs.length
+                                + " meaning(s) with keyword `" + keyWord + "`");
+
+                        for (String[] slang: slangs) {
+                            defaultTableModel.addRow(slang);
+                        }
                     }
                 }
             }
