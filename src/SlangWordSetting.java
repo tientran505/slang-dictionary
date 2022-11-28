@@ -37,9 +37,9 @@ public class SlangWordSetting extends JPanel implements ActionListener {
             slangFrame.showWindow();
         }
         else if (Objects.equals(cmd, "Edit a slang word")) {
-            AddSlangDialog slangFrame = new AddSlangDialog(slangDictionary);
-            slangFrame.setModal(true);
-            slangFrame.showWindow();
+            EditSlangDialog editSlangDialog = new EditSlangDialog(slangDictionary);
+            editSlangDialog.setModal(true);
+            editSlangDialog.showWindow();
         }
     }
 }

@@ -197,6 +197,18 @@ public class SlangDictionary {
         slangDictionary.put(slang, meanings);
     }
 
+    public boolean editSlang(String oldSlang, String newSlang) {
+        oldSlang = oldSlang.toUpperCase();
+        newSlang = newSlang.toUpperCase();
+        if (slangDictionary.containsKey(newSlang)) return false;
+
+        List<String> meanings = slangDictionary.get(oldSlang);
+        slangDictionary.remove(oldSlang);
+        slangDictionary.put(newSlang, meanings);
+
+        return true;
+    }
+
     public void writeDictionary(String fileName) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
