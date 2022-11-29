@@ -177,13 +177,45 @@ public class SlangDictionary {
         return false;
     }
 
-//    private void uninvertedIndex(String[] def, String slang) {
-//        if (slangDictionary.containsKey(slang.toUpperCase())) {
-//            for (String s: def) {
-//                if (slangMeaningKeyword.containsKey(s))
-//            }
-//        }
-//    }
+    public String[] generateQuizBySlang() {
+        String[] res = new String[6];
+        String[] randomSlang = randomSlangWord();
+
+        res[0] = randomSlang[0];
+        Random random = new Random();
+        int randomIndex = random.nextInt(4) + 2;
+        res[1] = randomIndex + "";
+        res[randomIndex] = randomSlang[1];
+
+        for (int i = 2; i < 6; i++) {
+            if (i != randomIndex) {
+                res[i] = randomSlangWord()[1];
+                if (res[i].equals(res[randomIndex])) i--;
+            }
+        }
+
+        return res;
+    }
+
+    public String[] generateQuizByDef() {
+        String[] res = new String[6];
+
+        String[] randomSlang = randomSlangWord();
+        res[0] = randomSlang[1];
+        Random random = new Random();
+        int randomIndex = random.nextInt(4) + 2;
+        res[1] = randomIndex + "";
+        res[randomIndex] = randomSlang[0];
+
+        for (int i = 2; i < 6; i++) {
+            if (i != randomIndex) {
+                res[i] = randomSlangWord()[0];
+                if (res[i].equals(res[randomIndex])) i--;
+            }
+        }
+
+        return res;
+    }
 
     public String[] randomSlangWord() {
         Random generator = new Random();
@@ -224,7 +256,6 @@ public class SlangDictionary {
                 invertedIndex(slang, wordInMeanings);
             }
         }
-
         slangDictionary.put(slang, meanings);
     }
 
