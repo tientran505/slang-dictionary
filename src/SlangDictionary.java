@@ -185,6 +185,19 @@ public class SlangDictionary {
 //        }
 //    }
 
+    public String[] randomSlangWord() {
+        Random generator = new Random();
+
+        Set<String> keys = slangDictionary.keySet();
+        List<String> keyList = new ArrayList<>(keys);
+
+        String randomKey = keyList.get(generator.nextInt(keyList.size()));
+
+        List<String> value = slangDictionary.get(randomKey);
+
+        return new String[]{randomKey, value.get(generator.nextInt(value.size()))};
+    }
+
     public void deleteSlangWord(String slang, String def) {
         if (slangDictionary.containsKey(slang)) {
             List<String> meanings = slangDictionary.get(slang);
@@ -195,6 +208,7 @@ public class SlangDictionary {
             else {
                 meanings.removeIf(meaning -> meaning.equals(def));
                 slangDictionary.replace(slang, meanings);
+                numOfWords--;
             }
         }
     }
@@ -287,6 +301,7 @@ public class SlangDictionary {
             map.getValue().clear();
         }
         slangMeaningKeyword.clear();
+        numOfWords = 0;
     }
 
     public TreeMap<String, List<String>> getSlangDictionary() {

@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
         JPanel searchLabel = new SearchSlangPanel(slangDictionary);
         JPanel editSlangLabel = new SlangWordSetting(slangDictionary);
         JLabel historyLabel = new JLabel();
-        JLabel randomLabel = new JLabel();
+        JPanel randomLabel = new RandomSlangPanel(slangDictionary);
         JLabel quizLabel = new JLabel();
 
         tabbedPane.add("Search Slang Word", searchLabel);

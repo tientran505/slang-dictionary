@@ -26,9 +26,13 @@ public class SlangWordSetting extends JPanel implements ActionListener {
         JButton dltBtn = new JButton("Delete a slang word");
         dltBtn.addActionListener(this);
 
+        JButton rsBtn = new JButton("Reset Slang Dictionary");
+        rsBtn.addActionListener(this);
+
         add(addBtn);
         add(editBtn);
         add(dltBtn);
+        add(rsBtn);
     }
 
     @Override
@@ -49,6 +53,20 @@ public class SlangWordSetting extends JPanel implements ActionListener {
             DeleteSlangDialog deleteSlangDialog = new DeleteSlangDialog(slangDictionary);
             deleteSlangDialog.setModal(true);
             deleteSlangDialog.showWindow();
+        }
+        else if (Objects.equals(cmd, "Reset Slang Dictionary")) {
+            int input = JOptionPane.showConfirmDialog(this, "Do you really want to reset" +
+                            " dictionary? This action can't be reversed!",
+                    "Reset Slang Dictionary", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null);
+
+            if (input == 0) {
+                slangDictionary.clearDictionary();
+                slangDictionary.importDictionary("slang.txt");
+                JOptionPane.showMessageDialog(this, "Slang dictionary has been " +
+                                "successfully reset", "Message Box",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 }

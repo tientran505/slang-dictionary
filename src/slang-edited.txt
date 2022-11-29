@@ -1,31 +1,4 @@
 Slag`Meaning
-#1`Number one
-$`Dollar| My dollar
-$_$`Has money
-%)`Drunk| giddy
-&`And
-&APOS;S`Wrongly displayed 's
-&HEARTS;`HTML code for a heart
-'EM`Them
-(!)`Sarcasm
-('_')`Emoticon Representing Boredom
-(.)(.)`Female Breasts
-(8)`Musical note (MSN)
-(:`Happy
-(A)`Angel (MSN)
-(H)`Cool dude emoticon (MSN)
-(K)`Kiss (MSN)
-(L)`Love heart (MSN)
-(N)`Thumbs down (MSN)
-(S)`Seriously
-(U)`Heartbroken
-(Y)`Thumbs up (MSN)
-(YN)`Fingers crossed (MSN)
-(^^^)`Shark
-(_8^(I)`Homer Simpson
-({)(})`Two People Hugging
-*`Indicating a spelling correction
-*$`Starbucks
 *$$`Starbucks
 *.*`Every file on a computer
 *<:-)`Clown
@@ -6887,7 +6860,6 @@ VBR`Variable Bit Rate
 VBS`Very Big Smile
 VC`Voice Chat
 VCARD`Virtual business card
-VCB`vietcombank| haruoi| haruoi| choancut
 VCD`Video Compact Disc
 VCR`Video Cassette Recorder
 VDU`Visual Display Unit
@@ -7633,7 +7605,6 @@ ZZZ`Sleepy| bored| tired
 ^_^`Happiness| satisfied
 ^_~`Wink
 ^~^`Mischievous Smile
-vcb`vietcombank| haruoi| haruoi| choancut
 |O|`LOL
 }:-)`Devilish smile
 ~`Denotes Sarcasm| Put At The End Of A Word To Make It Longer
