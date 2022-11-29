@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
         JPanel editSlangLabel = new SlangWordSetting(slangDictionary);
         JLabel historyLabel = new JLabel();
         JPanel randomLabel = new RandomSlangPanel(slangDictionary);
-        JLabel quizLabel = new JLabel();
+        JPanel quizLabel = new QuizzPanel(slangDictionary);
 
         tabbedPane.add("Search Slang Word", searchLabel);
         tabbedPane.add("Slang Word Setting", editSlangLabel);
