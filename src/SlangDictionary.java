@@ -161,8 +161,6 @@ public class SlangDictionary {
             }
         }
 
-        System.out.println("i = " + i);
-        System.out.println("res = " + res.length);
         return res;
     }
 
@@ -172,10 +170,33 @@ public class SlangDictionary {
             meaning.add(def);
             System.out.println("Size = " + meaning.size() + ", def = " + def);
             slangDictionary.put(slang.toUpperCase(), meaning);
+            invertedIndex(slang.toUpperCase(), def.split(" "));
             return true;
         }
 
         return false;
+    }
+
+//    private void uninvertedIndex(String[] def, String slang) {
+//        if (slangDictionary.containsKey(slang.toUpperCase())) {
+//            for (String s: def) {
+//                if (slangMeaningKeyword.containsKey(s))
+//            }
+//        }
+//    }
+
+    public void deleteSlangWord(String slang, String def) {
+        if (slangDictionary.containsKey(slang)) {
+            List<String> meanings = slangDictionary.get(slang);
+
+            if (meanings.size() == 1) {
+                slangDictionary.remove(slang);
+            }
+            else {
+                meanings.removeIf(meaning -> meaning.equals(def));
+                slangDictionary.replace(slang, meanings);
+            }
+        }
     }
 
     public void overwriteSlang(String slang, String oldDef, String newDef) {
@@ -184,6 +205,9 @@ public class SlangDictionary {
         for (int i = 0; i < meanings.size(); i++) {
             if (meanings.get(i).equals(oldDef)) {
                 meanings.set(i, newDef);
+
+                String[] wordInMeanings = newDef.split(" ");
+                invertedIndex(slang, wordInMeanings);
             }
         }
 
@@ -193,20 +217,38 @@ public class SlangDictionary {
     public void duplicateSlang(String slang, String def) {
         List<String> meanings = slangDictionary.get(slang.toUpperCase());
         meanings.add(def);
+
+        invertedIndex(slang, def.split(" "));
+
         System.out.println(slang + " - " + meanings);
         slangDictionary.put(slang, meanings);
     }
 
-    public boolean editSlang(String oldSlang, String newSlang) {
+    public void editSlang(String oldSlang, String newSlang, String definition) {
         oldSlang = oldSlang.toUpperCase();
         newSlang = newSlang.toUpperCase();
-        if (slangDictionary.containsKey(newSlang)) return false;
 
-        List<String> meanings = slangDictionary.get(oldSlang);
-        slangDictionary.remove(oldSlang);
-        slangDictionary.put(newSlang, meanings);
+        if (slangDictionary.containsKey(newSlang)) {
+            List<String> meanings = slangDictionary.get(newSlang);
+            meanings.add(definition);
 
-        return true;
+            List<String> oldMeanings = slangDictionary.get(oldSlang);
+            oldMeanings.remove(definition);
+
+            slangDictionary.replace(newSlang, meanings);
+            slangDictionary.replace(oldSlang, oldMeanings);
+        }
+
+        else {
+            List<String> newMeanings = new ArrayList<>();
+            newMeanings.add(definition);
+
+            List<String> oldMeanings = slangDictionary.get(oldSlang);
+            oldMeanings.remove(definition);
+
+            slangDictionary.put(newSlang, newMeanings);
+            slangDictionary.replace(oldSlang, oldMeanings);
+        }
     }
 
     public void writeDictionary(String fileName) {

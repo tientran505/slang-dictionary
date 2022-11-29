@@ -23,8 +23,12 @@ public class SlangWordSetting extends JPanel implements ActionListener {
         JButton editBtn = new JButton("Edit a slang word");
         editBtn.addActionListener(this);
 
+        JButton dltBtn = new JButton("Delete a slang word");
+        dltBtn.addActionListener(this);
+
         add(addBtn);
         add(editBtn);
+        add(dltBtn);
     }
 
     @Override
@@ -40,6 +44,11 @@ public class SlangWordSetting extends JPanel implements ActionListener {
             EditSlangDialog editSlangDialog = new EditSlangDialog(slangDictionary);
             editSlangDialog.setModal(true);
             editSlangDialog.showWindow();
+        }
+        else if (Objects.equals(cmd, "Delete a slang word")) {
+            DeleteSlangDialog deleteSlangDialog = new DeleteSlangDialog(slangDictionary);
+            deleteSlangDialog.setModal(true);
+            deleteSlangDialog.showWindow();
         }
     }
 }

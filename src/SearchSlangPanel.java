@@ -63,7 +63,12 @@ public class SearchSlangPanel extends JPanel implements ActionListener, MouseLis
 
         String[] columnNames = { "#", "Slang Word", "Meaning" };
 
-        table = new JTable(new DefaultTableModel(columnNames, 0));
+        table = new JTable(new DefaultTableModel(columnNames, 0)) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -79,7 +84,6 @@ public class SearchSlangPanel extends JPanel implements ActionListener, MouseLis
         addAllData();
         JScrollPane sp = new JScrollPane(table);
 
-        table.setEnabled(false);
         table.getTableHeader().setReorderingAllowed(false);
 
         add(Box.createVerticalStrut(20));
@@ -184,6 +188,7 @@ public class SearchSlangPanel extends JPanel implements ActionListener, MouseLis
     }
 
     public void addAllData() {
+        data = slangDictionary.convertToTableData();
         for (String[] datum : data) {
             defaultTableModel.addRow(datum);
         }

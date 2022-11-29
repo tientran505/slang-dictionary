@@ -1,39 +1,38 @@
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Dictionary;
 
 /**
  * PACKAGE_NAME
  * Created by PC
- * Date 11/29/2022 - 4:22 AM
+ * Date 11/29/2022 - 9:09 AM
  * Description: ...
  */
-public class EditSlangDialog extends JDialog implements TableModelListener, ActionListener {
-    private SlangDictionary slangDictionary;
+public class DeleteSlangDialog extends JDialog implements ActionListener {
+    SlangDictionary slangDictionary;
     private JTextField searchField;
     private JTable table;
     private DefaultTableModel defaultTableModel;
     boolean isBtnClicked = false;
     String[][] data;
     String[][] copy;
-
-    public EditSlangDialog(SlangDictionary slang) {
+    public DeleteSlangDialog(SlangDictionary slang) {
         slangDictionary = slang;
+        setTitle("Delete a Slang word");
         setSize(600, 600);
         setLocationRelativeTo(null);
         setResizable(false);
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        JLabel heading = new JLabel("Pick a cell to edit, then press enter", JLabel.CENTER);
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        JLabel heading = new JLabel("Select row(s) of word, then press the `Delete` button", JLabel.CENTER);
+
+        searchField = new JTextField("Search (e.g. NSFW, OMW, vamping)");
+        searchField.setPreferredSize(new Dimension(230, 30));
 
         searchField = new JTextField("Search (e.g. NSFW, OMW, vamping)");
         searchField.setPreferredSize(new Dimension(230, 30));
@@ -52,7 +51,11 @@ public class EditSlangDialog extends JDialog implements TableModelListener, Acti
         data = slangDictionary.convertToTableData();
         copy = slangDictionary.convertToTableData();
 
-        table = new JTable(new DefaultTableModel(columnNames, 0));
+        table = new JTable(new DefaultTableModel(columnNames, 0)) {
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -69,7 +72,11 @@ public class EditSlangDialog extends JDialog implements TableModelListener, Acti
         addAllData();
         JScrollPane sp = new JScrollPane(table);
         table.getTableHeader().setReorderingAllowed(false);
-        table.getModel().addTableModelListener(this);
+
+        JPanel deletePnl = new JPanel(new FlowLayout());
+        JButton dtlBtn = new JButton("Delete");
+        deletePnl.add(dtlBtn);
+        dtlBtn.addActionListener(this);
 
         add(Box.createVerticalStrut(20));
         add(heading);
@@ -77,8 +84,10 @@ public class EditSlangDialog extends JDialog implements TableModelListener, Acti
         add(searchPn);
         add(Box.createVerticalStrut(20));
         add(sp);
-
+        add(Box.createVerticalStrut(20));
+        add(deletePnl);
     }
+
     public void showWindow() {
         setVisible(true);
     }
@@ -90,51 +99,33 @@ public class EditSlangDialog extends JDialog implements TableModelListener, Acti
     }
 
     @Override
-    public void tableChanged(TableModelEvent e) {
-        if (isBtnClicked) return;
-        int rSelectedCell = table.getSelectedRow();
-        int cSelectedCell = table.getSelectedColumn();
+    public void actionPerformed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+        if (cmd.equals("Delete")) {
 
-        String data = (String) table.getValueAt(rSelectedCell, cSelectedCell);
-        String oldKey = copy[rSelectedCell][1];
-        String oldValue = copy[rSelectedCell][2];
+            int input = JOptionPane.showConfirmDialog(this, "Do you really want to delete?",
+                    "Delete Slang Word", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null);
 
-        if (cSelectedCell == 1) {
-            slangDictionary.editSlang(oldKey, data, oldValue);
+            System.out.println(input);
+
+            if (input == 0) {
+                int[] selection = table.getSelectedRows();
+                for (int j : selection) {
+                    String slang = (String) defaultTableModel.getValueAt(j, 1);
+                    String meaning = (String) defaultTableModel.getValueAt(j, 2);
+                    slangDictionary.deleteSlangWord(slang, meaning);
+                }
+                refreshTable();
+                slangDictionary.writeDictionary("slang-edited.txt");
+            }
         }
-        else if (cSelectedCell == 2) {
-            slangDictionary.overwriteSlang(oldKey, oldValue, data);
-        }
-
-        this.data[rSelectedCell][cSelectedCell] = copy[rSelectedCell][cSelectedCell] = data;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        isBtnClicked = true;
-        String cmd = e.getActionCommand();
-        if (cmd.equals("Search")) {
-            String slang = searchField.getText();
-
-            if (slang.equals("")) {
-                JOptionPane.showMessageDialog(this, "Please Enter slang to find");
-            }
-            else {
-                String[][] newDatas = this.slangDictionary.searchBySlangWord(slang.toUpperCase());
-
-                if (newDatas != null) {
-                    clearTable();
-
-                    for (String[] newData : newDatas) {
-                        defaultTableModel.addRow(newData);
-                    }
-                }
-            }
-        }
-        else if (cmd.equals("Refresh")) {
-            clearTable();
-            addAllData();
-        }
+    public void refreshTable() {
+        clearTable();
+        this.data = slangDictionary.convertToTableData();
+        addAllData();
     }
 
     private void clearTable() {

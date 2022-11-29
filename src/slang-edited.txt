@@ -1,6 +1,6 @@
 Slag`Meaning
 #1`Number one
-$`Dollar| money
+$`Dollar| My dollar
 $_$`Has money
 %)`Drunk| giddy
 &`And
@@ -6887,7 +6887,7 @@ VBR`Variable Bit Rate
 VBS`Very Big Smile
 VC`Voice Chat
 VCARD`Virtual business card
-VCB`aa| vietcom
+VCB`vietcombank| haruoi| haruoi| choancut
 VCD`Video Compact Disc
 VCR`Video Cassette Recorder
 VDU`Visual Display Unit
@@ -7633,7 +7633,7 @@ ZZZ`Sleepy| bored| tired
 ^_^`Happiness| satisfied
 ^_~`Wink
 ^~^`Mischievous Smile
-vcb`aa| vietcom
+vcb`vietcombank| haruoi| haruoi| choancut
 |O|`LOL
 }:-)`Devilish smile
 ~`Denotes Sarcasm| Put At The End Of A Word To Make It Longer
